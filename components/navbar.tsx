@@ -42,8 +42,8 @@ export default function Navbar() {
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
-        <div className='flex flex-1 items-center justify-end space-x-2'>
-          <a href='https://github.com/LeBombusP' target='_blank' className='mr-6 flex items-center space-x-2'>
+        <div className='flex flex-1 items-center justify-end space-x-2 px-4'>
+          <a href='https://github.com/LeBombusP' target='_blank' className='mr-2 md:mr-6 flex items-center space-x-2'>
             <IconBrandGithub color={dark ? 'white' : 'black'} size={18} />
           </a>
           <button type='button' onClick={changeTheme}>
