@@ -58,7 +58,6 @@ export default function Login() {
       });
 
       return router.push('/dashboard');
-      // return redirect('/dashboard');
     }
     return alert(data.error);
   };
