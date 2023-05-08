@@ -127,7 +127,7 @@ export default function LoginForm() {
           </AlertDialogContent>
         </AlertDialog>
         <Separator orientation='vertical' />
-        <Link className='font-medium text-sm' href='/signin'>
+        <Link className='font-medium text-sm' href='/signup'>
           Dont have an account?
         </Link>
       </div>

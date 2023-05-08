@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   } catch (error) {
     if (error.message == 'NotFoundError' || error.code == 'P2025') {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Invalid email' });
     }
     console.error(error);
     return res.status(500).json({ error: 'Server error' });
@@ -44,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     subject: 'Passwordless login',
     text: 'login link to lebombusp.com',
     html: `<strong>Click below to login</strong><br>
-    <a href="${process.env.ENV === 'DEV' ? 'http://localhost:3000' : 'https://lebombusp.com'}/auth/jwt/${jwt}">Login</a><br>
+    <a href="${process.env.ENV === 'DEV' ? 'http://localhost:3000' : 'https://lebombusp.com'}/jwt/${jwt}">Login</a><br>
     <p>This link will expire in 8 hours</p><br>
     <p>Not you? Do NOT click the link and just ingore the email</p>`,
   };
