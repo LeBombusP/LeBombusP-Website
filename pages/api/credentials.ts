@@ -33,7 +33,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setSubject('urn:example:subject')
-    .setExpirationTime(remember ? '30d' : '1d') //add remember me functionality
+    .setExpirationTime(remember ? '30d' : '1d')
     .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
   return res.status(200).json({ jwt, time: remember ? 30 : 1 });

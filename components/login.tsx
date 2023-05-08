@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -39,11 +40,13 @@ export default function LoginForm() {
     const formData = new FormData(e.currentTarget);
     const username = formData.get('username') as string;
     const password = formData.get('password') as string;
+    const remember = formData.get('remember') !== null;
     const response = await fetch('/api/credentials', {
       method: 'POST',
       body: JSON.stringify({
         username,
         password,
+        remember,
       }),
     });
 
@@ -67,14 +70,20 @@ export default function LoginForm() {
               <CardTitle className='m-auto'>Username/Password</CardTitle>
               <CardDescription className='m-auto'>Log in here with username and password.</CardDescription>
             </CardHeader>
-            <CardContent className='space-y-2'>
+            <CardContent className='space-y-4'>
               <div className='space-y-1'>
                 <Label htmlFor='username'>Username</Label>
-                <Input required name='username' placeholder='David Nowotny' />
+                <Input required name='username' id='username' placeholder='David Nowotny' />
               </div>
               <div className='space-y-1'>
                 <Label htmlFor='password'>Password</Label>
-                <Input required type='password' name='password' placeholder='••••••••' />
+                <Input required type='password' id='password' name='password' placeholder='••••••••' />
+              </div>
+              <div className='flex items-center'>
+                <Checkbox id='remember' name='remember' />
+                <label htmlFor='remember' className='text-sm ml-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                  Remember me!
+                </label>
               </div>
             </CardContent>
             <CardFooter>
@@ -93,7 +102,7 @@ export default function LoginForm() {
             <CardContent className='space-y-2'>
               <div className='space-y-1'>
                 <Label htmlFor='email'>Email</Label>
-                <Input required type='email' name='email' placeholder='nowotny@mail.com' />
+                <Input required type='email' id='email' name='email' placeholder='nowotny@mail.com' />
               </div>
             </CardContent>
             <CardFooter>
