@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client';
 import * as jose from 'jose';
 import 'dotenv/config';
 import * as sendgrid from '@sendgrid/mail';
+import { getUserData, signJWT } from '@/lib/auth';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
@@ -30,12 +31,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ error: 'Server error' });
   }
 
-  const jwt = await new jose.SignJWT({})
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setSubject('urn:example:subject')
-    .setExpirationTime('8h')
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+  const { id, name, mail } = await getUserData(email)
+  const jwt = await signJWT(process.env.JWT_KEY, "1d", id, name, mail)
 
   sendgrid.setApiKey(process.env.EMAIL_KEY as string);
   const msg = {

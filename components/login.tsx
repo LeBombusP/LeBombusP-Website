@@ -63,6 +63,7 @@ export default function LoginForm() {
         <TabsTrigger value='account'>Username/Password</TabsTrigger>
         <TabsTrigger value='password'>Email (passwordless)</TabsTrigger>
       </TabsList>
+
       <TabsContent value='account'>
         <Card>
           <form onSubmit={loginCredentials}>
@@ -92,6 +93,7 @@ export default function LoginForm() {
           </form>
         </Card>
       </TabsContent>
+
       <TabsContent value='password'>
         <Card>
           <form onSubmit={loginPasswordless}>
@@ -111,6 +113,7 @@ export default function LoginForm() {
           </form>
         </Card>
       </TabsContent>
+
       <div className='w-full mt-2 inline-flex h-10 items-center justify-evenly rounded-md border-4 border-muted p-1 text-card-foreground'>
         <AlertDialog>
           <AlertDialogTrigger className='font-medium text-sm'>Forgot password?</AlertDialogTrigger>
