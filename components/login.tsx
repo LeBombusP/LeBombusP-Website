@@ -15,12 +15,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import cookie from 'cookie';
+import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-// import { redirect } from 'next/navigation';
 
-export default function Login() {
+export default function LoginForm() {
   const router = useRouter();
 
   const loginPasswordless = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,13 +49,7 @@ export default function Login() {
 
     const data = await response.json();
     if (response.status === 200) {
-      cookie.serialize('jwt', data.jwt, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7,
-        secure: true,
-        httpOnly: true,
-      });
-
+      Cookies.set('jwt', data.jwt, { expires: data.time, path: '/' });
       return router.push('/dashboard');
     }
     return alert(data.error);
@@ -116,7 +109,7 @@ export default function Login() {
             <AlertDialogHeader>
               <AlertDialogTitle>Well sh*t!</AlertDialogTitle>
               <AlertDialogDescription>
-                If you have forgotten your username or password you can still log id via email and change your username/password in the dashboard.
+                If you have forgotten your username or password you can still log in via email and vice versa then change your credentials in the dashboard.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -125,7 +118,7 @@ export default function Login() {
           </AlertDialogContent>
         </AlertDialog>
         <Separator orientation='vertical' />
-        <Link className='font-medium text-sm' href='/register'>
+        <Link className='font-medium text-sm' href='/signin'>
           Dont have an account?
         </Link>
       </div>

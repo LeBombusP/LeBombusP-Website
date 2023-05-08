@@ -1,3 +1,4 @@
+import Navbar from '@/components/navbar';
 import './globals.css';
 import { Inter } from 'next/font/google';
 
@@ -10,7 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
-      <body className={inter.className + ' dark'}>{children}</body>
+      <body className={inter.className + ' dark'}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
