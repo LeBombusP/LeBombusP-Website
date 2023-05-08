@@ -1,7 +1,6 @@
 'use client';
-import React from 'react';
-import { useEffect } from 'react';
 import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Dashboard() {
   //temporary

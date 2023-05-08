@@ -1,9 +1,7 @@
-/* eslint-disable import/no-anonymous-default-export */
 import { getUserData, signJWT } from '@/lib/auth';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import * as jose from 'jose';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -32,8 +30,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.error(error);
     return res.status(500).json({ error: 'Server error' });
   }
-  
-  const { id, name, mail } = await getUserData(username)
-  const jwt = await signJWT(process.env.JWT_KEY, remember, id, name, mail)
+
+  const { id, name, mail } = await getUserData(username);
+  const jwt = await signJWT(process.env.JWT_KEY, remember, id, name, mail);
   return res.status(200).json({ jwt, time: remember ? 30 : 1 });
 };

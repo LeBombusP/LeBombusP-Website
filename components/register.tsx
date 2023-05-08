@@ -15,7 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { fchmod } from 'fs';
+import { post } from '@/lib/fetch';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -30,19 +30,15 @@ export default function Register() {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const repeat = formData.get('repeat') as string;
-    console.log(username, email, password, repeat);
-    const response = await fetch('/api/credentials', {
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        repeat,
-      }),
+
+    const { data, status } = await post('./credentials', {
+      username,
+      email,
+      password,
+      repeat,
     });
 
-    const data = await response.json();
-    if (response.status === 200) {
+    if (status === 200) {
       Cookies.set('jwt', data.jwt, { expires: data.time, path: '/' });
       return router.push('/dashboard');
     }
@@ -88,6 +84,7 @@ export default function Register() {
           </CardFooter>
         </form>
       </Card>
+
       <div className='w-full mt-2 inline-flex h-10 items-center justify-evenly rounded-md border-4 border-muted p-1 text-card-foreground'>
         <AlertDialog>
           <AlertDialogTrigger className='font-medium text-sm'>Why cant I sign up?</AlertDialogTrigger>

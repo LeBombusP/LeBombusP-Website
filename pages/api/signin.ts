@@ -1,11 +1,8 @@
-/* eslint-disable import/no-anonymous-default-export */
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { getUserData, signJWT } from '@/lib/auth';
 import { PrismaClient } from '@prisma/client';
-import { SignJWT } from 'jose';
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import { nanoid } from 'nanoid';
-import { getUserData, signJWT } from '@/lib/auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { username, email, password, repeat } = req.body;
@@ -13,7 +10,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     return res.status(404).json({ error: 'Not found' });
   }
-  //add imput validation, pass = repeat
+  //add imput validation, pass = repeat (password)
   const prisma = new PrismaClient();
   await prisma.user
     .findFirst({
@@ -52,10 +49,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     console.error(error);
     return res.status(500).json({ error: 'Server error' });
   }
-  
-  const { id, name, mail } = await getUserData(username)
-  const jwt = await signJWT(process.env.JWT_KEY, "1d", id, name, mail)
+
+  const { id, name, mail } = await getUserData(username);
+  const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail);
 
   return res.status(200).json({ jwt, time: 1 });
-  
 };

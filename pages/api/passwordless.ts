@@ -1,10 +1,8 @@
-/* eslint-disable import/no-anonymous-default-export */
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
-import * as jose from 'jose';
-import 'dotenv/config';
-import * as sendgrid from '@sendgrid/mail';
 import { getUserData, signJWT } from '@/lib/auth';
+import { PrismaClient } from '@prisma/client';
+import * as sendgrid from '@sendgrid/mail';
+import 'dotenv/config';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
@@ -31,8 +29,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ error: 'Server error' });
   }
 
-  const { id, name, mail } = await getUserData(email)
-  const jwt = await signJWT(process.env.JWT_KEY, "1d", id, name, mail)
+  const { id, name, mail } = await getUserData(email);
+  const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail);
 
   sendgrid.setApiKey(process.env.EMAIL_KEY as string);
   const msg = {
