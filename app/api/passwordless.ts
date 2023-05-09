@@ -1,17 +1,15 @@
 import { getUserData, signJWT } from '@/lib/auth';
+import { jsonS } from '@/lib/utils';
 import { PrismaClient } from '@prisma/client';
 import * as sendgrid from '@sendgrid/mail';
 import 'dotenv/config';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextRequest } from 'next/server';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
+export default async function POST(req: NextRequest) {
+  const { email } = await req.json();
 
-  if (req.method !== 'POST') {
-    return res.status(404).json({ error: 'Not found' });
-  }
   if (!!email) {
-    return res.status(400).json({ error: 'Missing username or password' });
+    return new Response(jsonS({ error: 'Missing email' }), { status: 400 });
   }
 
   try {
@@ -23,10 +21,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   } catch (error) {
     if (error.message == 'NotFoundError' || error.code == 'P2025') {
-      return res.status(401).json({ error: 'Invalid email' });
+      return new Response(jsonS({ error: 'Invalid email' }), { status: 401 });
     }
     console.error(error);
-    return res.status(500).json({ error: 'Server error' });
+    return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
   const { id, name, mail } = await getUserData(email);
@@ -46,14 +44,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   sendgrid.send(msg).then(
     () => {
       console.log('Email sent');
-      return res.status(200).json({ message: 'Email sent' });
+      return new Response(jsonS({ message: 'Email sent' }), { status: 200 });
     },
     (error) => {
       console.log(error);
       if (error.response) {
         console.log(error.response.body);
       }
-      return res.status(500).json({ error: 'Server error' });
+      return new Response(jsonS({ error: 'Server error' }), { status: 500 });
     }
   );
-};
+}

@@ -1,15 +1,12 @@
 import { getUserData, signJWT } from '@/lib/auth';
+import { jsonS } from '@/lib/utils';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextRequest } from 'next/server';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { username, email, password, repeat } = req.body;
-
-  if (req.method !== 'POST') {
-    return res.status(404).json({ error: 'Not found' });
-  }
+export default async function POST(req: NextRequest) {
+  const { username, email, password, repeat } = await req.json();
   //add imput validation, pass = repeat (password)
   const prisma = new PrismaClient();
   await prisma.user
@@ -23,12 +20,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     })
     .then((user) => {
       if (user) {
-        return res.status(409).json({ error: 'Username or email is taken' });
+        return new Response(jsonS({ error: 'Username or email is taken' }), { status: 409 });
       }
     })
     .catch((error) => {
       console.error(error);
-      return res.status(500).json({ error: 'Server error' });
+      return new Response(jsonS({ error: 'Server error' }), { status: 500 });
     });
 
   const hashed = bcrypt.hashSync(password, 10);
@@ -44,14 +41,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   } catch (error) {
     if (error.message == 'NotFoundError' || error.code == 'P2025') {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return new Response(jsonS({ error: 'Invalid credentials' }), { status: 401 });
     }
     console.error(error);
-    return res.status(500).json({ error: 'Server error' });
+    return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
   const { id, name, mail } = await getUserData(username);
   const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail);
 
-  return res.status(200).json({ jwt, time: 1 });
+  return new Response(jsonS({ jwt, time: 1 }), { status: 200 });
 };
