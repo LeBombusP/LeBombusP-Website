@@ -31,7 +31,7 @@ export default function Register() {
     const password = formData.get('password') as string;
     const repeat = formData.get('repeat') as string;
 
-    const { data, status } = await post('./credentials', {
+    const { data, status } = await post('./signin', {
       username,
       email,
       password,
@@ -42,6 +42,7 @@ export default function Register() {
       Cookies.set('jwt', data.jwt, { expires: data.time, path: '/' });
       return router.push('/dashboard');
     }
+    console.log(data.error);
     return alert(data.error);
   };
 
@@ -78,9 +79,7 @@ export default function Register() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button disabled className='m-auto'>
-              Log in with credentials
-            </Button>
+            <Button className='m-auto'>Create account</Button>
           </CardFooter>
         </form>
       </Card>

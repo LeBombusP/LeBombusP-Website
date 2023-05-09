@@ -24,21 +24,26 @@ export async function getUserData(info: string) {
   const prisma = new PrismaClient();
   let user;
   try {
-    user = await prisma.user.findFirst({
+    user = await prisma.user.findFirstOrThrow({
       where: {
-        OR: {
-          name: info,
-          email: info,
-        },
+        OR: [
+          {
+            name: info,
+          },
+          {
+            email: info,
+          },
+        ],
       },
     });
   } catch (error) {
-    if (error.message == 'NotFoundError' || error.code == 'P2025') {
-      return { error: 'User not found' };
+    if (error.code == 'P2025') {
+      return { error: 'Database error' };
     }
-    console.error(error);
+    console.log(error);
     return { error: 'Server error' };
   }
+  console.log(user);
   return { id: user.id, name: user.name, mail: user.email };
 }
 
@@ -55,7 +60,7 @@ interface ReturnInputs {
   passwordRegister?: boolean;
 }
 
-export  function validateInputs(inputs: Inputs) {
+export function validateInputs(inputs: Inputs) {
   let returnInputs: ReturnInputs = {
     username: false,
     email: false,
@@ -83,9 +88,9 @@ export  function validateInputs(inputs: Inputs) {
 
   try {
     const emailSchema = z.object({
-      username: z.string().email(),
+      email: z.string().email(),
     });
-    emailSchema.parse({ username: inputs.username });
+    emailSchema.parse({ email: inputs.email });
 
     returnInputs = {
       username: returnInputs.username,
@@ -98,15 +103,15 @@ export  function validateInputs(inputs: Inputs) {
 
   try {
     const passwordSchema = z.object({
-      username: z.string().min(8).max(32),
+      password: z.string().min(8).max(32),
     });
-    passwordSchema.parse({ username: inputs.username });
+    passwordSchema.parse({ password: inputs.password });
 
     returnInputs = {
       username: returnInputs.username,
       email: returnInputs.email,
       password: true,
-      passwordRegister: false
+      passwordRegister: false,
     };
     if (inputs.password === inputs.repeatPassword) {
       returnInputs = {
@@ -116,7 +121,6 @@ export  function validateInputs(inputs: Inputs) {
         passwordRegister: true,
       };
     }
-
   } catch (error) {
     console.log(error);
   }

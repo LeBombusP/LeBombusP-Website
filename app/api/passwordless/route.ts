@@ -5,10 +5,10 @@ import * as sendgrid from '@sendgrid/mail';
 import 'dotenv/config';
 import type { NextRequest } from 'next/server';
 
-export default async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const { email } = await req.json();
 
-  const imputs = validateInputs({ email })
+  const imputs = validateInputs({ email });
   if (!imputs.email) {
     return new Response(jsonS({ error: 'Invalid input' }), { status: 400 });
   }
@@ -34,7 +34,7 @@ export default async function POST(req: NextRequest) {
   sendgrid.setApiKey(process.env.EMAIL_KEY as string);
   const msg = {
     to: email,
-    from: 'noreply@lebombusp.com', // Use the email address or domain you verified above
+    from: 'noreply@lebombusp.com',
     subject: 'Passwordless login',
     text: 'login link to lebombusp.com',
     html: `<strong>Click below to login</strong><br>
@@ -44,7 +44,6 @@ export default async function POST(req: NextRequest) {
   };
   sendgrid.send(msg).then(
     () => {
-      console.log('Email sent');
       return new Response(jsonS({ message: 'Email sent' }), { status: 200 });
     },
     (error) => {

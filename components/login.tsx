@@ -33,6 +33,10 @@ export default function LoginForm() {
       email,
     });
     //inform user about email being sent
+    if (status === 200) {
+      return router.push('/dashboard');
+    }
+    return alert(data.error);
   };
   const loginCredentials = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
