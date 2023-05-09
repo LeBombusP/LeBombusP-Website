@@ -1,18 +1,19 @@
-import { getUserData, signJWT } from '@/lib/auth';
+import { getUserData, signJWT, validateInputs } from '@/lib/auth';
+import { jsonS } from '@/lib/utils';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import type { NextRequest } from 'next/server';
-import { jsonS } from '@/lib/utils';
 
 export default async function POST(req: NextRequest) {
   const { username, password, remember } = await req.json();
-
-  if (!!username || !!password) {
-    return new Response(jsonS({ error: 'Missing username or password' }), { status: 400 });
+  
+  const imputs = validateInputs({ username, password })
+  if (!imputs.username || !imputs.password) {
+    return new Response(jsonS({ error: 'Invalid inputs' }), { status: 400 });
   }
-  const hashed = bcrypt.hashSync(password, 10);
 
+  const hashed = bcrypt.hashSync(password, 10);
   try {
     const prisma = new PrismaClient();
     await prisma.user.findFirstOrThrow({

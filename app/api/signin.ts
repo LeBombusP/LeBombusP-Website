@@ -1,4 +1,4 @@
-import { getUserData, signJWT } from '@/lib/auth';
+import { getUserData, signJWT, validateInputs } from '@/lib/auth';
 import { jsonS } from '@/lib/utils';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
@@ -7,7 +7,12 @@ import type { NextRequest } from 'next/server';
 
 export default async function POST(req: NextRequest) {
   const { username, email, password, repeat } = await req.json();
-  //add imput validation, pass = repeat (password)
+
+  const imputs = validateInputs({ username, email, password, repeatPassword: repeat });
+  if (!imputs.email || !imputs.username || !imputs.password || !imputs.passwordRegister) {
+    return new Response(jsonS({ error: 'Invalid input' }), { status: 400 });
+  }
+
   const prisma = new PrismaClient();
   await prisma.user
     .findFirst({
@@ -51,4 +56,4 @@ export default async function POST(req: NextRequest) {
   const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail);
 
   return new Response(jsonS({ jwt, time: 1 }), { status: 200 });
-};
+}

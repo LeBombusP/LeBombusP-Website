@@ -1,4 +1,4 @@
-import { getUserData, signJWT } from '@/lib/auth';
+import { getUserData, signJWT, validateInputs } from '@/lib/auth';
 import { jsonS } from '@/lib/utils';
 import { PrismaClient } from '@prisma/client';
 import * as sendgrid from '@sendgrid/mail';
@@ -8,8 +8,9 @@ import type { NextRequest } from 'next/server';
 export default async function POST(req: NextRequest) {
   const { email } = await req.json();
 
-  if (!!email) {
-    return new Response(jsonS({ error: 'Missing email' }), { status: 400 });
+  const imputs = validateInputs({ email })
+  if (!imputs.email) {
+    return new Response(jsonS({ error: 'Invalid input' }), { status: 400 });
   }
 
   try {
