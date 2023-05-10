@@ -1,4 +1,5 @@
 import Navbar from '@/components/navbar';
+import { Toaster } from '@/components/ui/toaster';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={inter.className + ' dark'}>
         <Navbar />
         {children}
+        <Toaster />
       </body>
     </html>
   );

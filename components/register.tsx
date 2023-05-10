@@ -15,6 +15,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/components/ui/use-toast';
 import { post } from '@/lib/fetch';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
@@ -22,6 +23,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,68 +44,73 @@ export default function Register() {
       Cookies.set('jwt', data.jwt, { expires: data.time, path: '/' });
       return router.push('/dashboard');
     }
-    console.log(data.error);
-    return alert(data.error);
+    return toast({
+      variant: 'destructive',
+      title: 'Error!',
+      description: data.error,
+    });
   };
 
   return (
-    <div className='w-[400px] absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2'>
-      <Card>
-        <form onSubmit={handleRegister}>
-          <CardHeader>
-            <CardTitle className='m-auto'>Hello there!</CardTitle>
-            <CardDescription className='m-auto'>Create your account to acces the dashboard.</CardDescription>
-          </CardHeader>
-          <CardContent className='space-y-4'>
-            <div className='space-y-1'>
-              <Label htmlFor='username'>Username</Label>
-              <Input required name='username' id='username' placeholder='David Nowotny' />
-            </div>
-            <div className='space-y-1'>
-              <Label htmlFor='email'>Email</Label>
-              <Input required type='email' name='email' id='email' placeholder='nowotny@mail.com' />
-            </div>
-            <div className='space-y-1'>
-              <Label htmlFor='password'>Password</Label>
-              <Input required type='password' id='password' name='password' placeholder='••••••••' />
-            </div>
-            <div className='space-y-1'>
-              <Label htmlFor='repeat'>Repeat password</Label>
-              <Input required type='password' id='repeat' name='repeat' placeholder='••••••••' />
-            </div>
-            <div className='flex items-center'>
-              <Checkbox id='tos' required />
-              <label htmlFor='tos' className='text-sm ml-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
-                I agree to the terms of service
-              </label>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button className='m-auto'>Create account</Button>
-          </CardFooter>
-        </form>
-      </Card>
+    <div className='grid grid-cols-1 grid-rows-[90vh] items-center justify-items-center'>
+      <div className='w-[400px]'>
+        <Card>
+          <form onSubmit={handleRegister}>
+            <CardHeader>
+              <CardTitle className='m-auto'>Hello there!</CardTitle>
+              <CardDescription className='m-auto'>Create your account to acces the dashboard.</CardDescription>
+            </CardHeader>
+            <CardContent className='space-y-4'>
+              <div className='space-y-1'>
+                <Label htmlFor='username'>Username</Label>
+                <Input required name='username' id='username' placeholder='David Nowotny' />
+              </div>
+              <div className='space-y-1'>
+                <Label htmlFor='email'>Email</Label>
+                <Input required type='email' name='email' id='email' placeholder='nowotny@mail.com' />
+              </div>
+              <div className='space-y-1'>
+                <Label htmlFor='password'>Password</Label>
+                <Input required type='password' id='password' name='password' placeholder='••••••••' />
+              </div>
+              <div className='space-y-1'>
+                <Label htmlFor='repeat'>Repeat password</Label>
+                <Input required type='password' id='repeat' name='repeat' placeholder='••••••••' />
+              </div>
+              <div className='flex items-center'>
+                <Checkbox id='tos' required />
+                <label htmlFor='tos' className='text-sm ml-2 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'>
+                  I agree to the terms of service
+                </label>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button className='m-auto'>Create account</Button>
+            </CardFooter>
+          </form>
+        </Card>
 
-      <div className='w-full mt-2 inline-flex h-10 items-center justify-evenly rounded-md border-4 border-muted p-1 text-card-foreground'>
-        <AlertDialog>
-          <AlertDialogTrigger className='font-medium text-sm'>Why cant I sign up?</AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Why cant I sign up??!!</AlertDialogTitle>
-              <AlertDialogDescription>
-                Making sign up functionality would held me resonsible under EU law if i would suffer data leak, and because i cannot trust my garbage code
-                dashboard will be only avalible for me.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>What a shame</AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <Separator orientation='vertical' />
-        <Link className='font-medium text-sm' href='/login'>
-          Already have an account?
-        </Link>
+        <div className='w-full mt-2 inline-flex h-10 items-center justify-evenly rounded-md border-4 border-muted p-1 text-card-foreground'>
+          <AlertDialog>
+            <AlertDialogTrigger className='font-medium text-sm'>Why cant I sign up?</AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Why cant I sign up??!!</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Making sign up functionality would held me resonsible under EU law if i would suffer data leak, and because i cannot trust my garbage code
+                  dashboard will be only avalible for me.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>What a shame</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Separator orientation='vertical' />
+          <Link className='font-medium text-sm' href='/login'>
+            Already have an account?
+          </Link>
+        </div>
       </div>
     </div>
   );
