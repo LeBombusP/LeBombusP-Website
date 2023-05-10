@@ -31,10 +31,10 @@ export async function POST(req: NextRequest) {
     return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
-  const { id, name, mail, error } = await getUserData(username);
+  const { id, name, mail, error, perms } = await getUserData(username);
   if (error) {
     return new Response(jsonS({ error }), { status: 500 });
   }
-  const jwt = await signJWT(process.env.JWT_KEY, remember, id, name, mail);
+  const jwt = await signJWT(process.env.JWT_KEY, remember, id, name, mail, perms);
   return new Response(jsonS({ jwt, time: remember ? 30 : 1 }), { status: 200 });
 }

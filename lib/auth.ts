@@ -3,12 +3,12 @@ import { SignJWT, jwtVerify } from 'jose';
 import { nanoid } from 'nanoid';
 import { z } from 'zod';
 
-export async function signJWT(key: string | undefined, expieres: string | boolean, id: string, username: string, email: string) {
+export async function signJWT(key: string | undefined, expieres: string | boolean, id: string, username: string, email: string, perms: number) {
   if (typeof expieres == 'boolean') {
     expieres = expieres ? '30d' : '1d';
   }
 
-  return await new SignJWT({ id, username, email })
+  return await new SignJWT({ id, username, email, perms })
     .setProtectedHeader({ alg: 'HS256' })
     .setJti(nanoid())
     .setIssuedAt()
@@ -17,7 +17,30 @@ export async function signJWT(key: string | undefined, expieres: string | boolea
 }
 
 export async function verifyJWT(key: string | undefined, token: string) {
-  return await jwtVerify(token, new TextEncoder().encode(key));
+  if (!key) {
+    return {
+      verified: false
+    }
+  }
+
+  try {
+    const value = await jwtVerify(token, new TextEncoder().encode(key));
+    if (value.payload.exp && value.payload.exp > Date.now() / 1000) {
+      return {
+        verified: true,
+        user: {
+          id: value.payload.id,
+          username: value.payload.username,
+          email: value.payload.email,
+          perms: value.payload.perms,
+        }
+      }
+    } 
+  } catch (error) {
+    return {
+      verified: false
+    }
+  }
 }
 
 export async function getUserData(info: string) {
@@ -44,7 +67,7 @@ export async function getUserData(info: string) {
     return { error: 'Server error' };
   }
   console.log(user);
-  return { id: user.id, name: user.name, mail: user.email };
+  return { id: user.id, name: user.name, mail: user.email, perms: user.permissions };
 }
 
 interface Inputs {

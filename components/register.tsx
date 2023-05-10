@@ -85,7 +85,7 @@ export default function Register() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className='m-auto'>Create account</Button>
+              <Button disabled className='m-auto'>Create account</Button>
             </CardFooter>
           </form>
         </Card>

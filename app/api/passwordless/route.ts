@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
     return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
-  const { id, name, mail } = await getUserData(email);
-  const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail);
+  const { id, name, mail, perms } = await getUserData(email);
+  const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail, perms);
 
   sendgrid.setApiKey(process.env.EMAIL_KEY as string);
   const msg = {
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     subject: 'Passwordless login',
     text: 'login link to lebombusp.com',
     html: `<strong>Click below to login</strong><br>
-    <a href="${process.env.ENV === 'DEV' ? 'http://localhost:3000' : 'https://lebombusp.com'}/jwt/${jwt}">Login</a><br>
+    <a href="${process.env.ENV === 'DEV' ? 'http://localhost:3000' : 'https://lebombusp.com'}/login/jwt/${jwt}">Login</a><br>
     <p>This link will expire in 8 hours</p><br>
     <p>Not you? Do NOT click the link and just ingore the email</p>`,
   };
