@@ -8,6 +8,7 @@ import type { NextRequest } from 'next/server';
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
 
+  // Input validation
   const imputs = validateInputs({ email });
   if (!imputs.email) {
     return new Response(jsonS({ error: 'Invalid input' }), { status: 400 });
@@ -21,16 +22,20 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
+    // Wrong email
     if (error.message == 'NotFoundError' || error.code == 'P2025') {
       return new Response(jsonS({ error: 'Invalid email' }), { status: 401 });
     }
+    // Unknown error
     console.error(error);
     return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
+  //Get user data abd store it in jwt
   const { id, name, mail, perms } = await getUserData(email);
   const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail, perms);
 
+  // Send email with jwt link
   sendgrid.setApiKey(process.env.EMAIL_KEY as string);
   const msg = {
     to: email,

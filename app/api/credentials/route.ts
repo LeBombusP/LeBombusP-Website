@@ -8,6 +8,7 @@ import type { NextRequest } from 'next/server';
 export async function POST(req: NextRequest) {
   const { username, password, remember } = await req.json();
 
+  // Input validation
   const imputs = validateInputs({ username, password });
   if (!imputs.username || !imputs.password) {
     return new Response(jsonS({ error: 'Invalid inputs' }), { status: 400 });
@@ -20,17 +21,21 @@ export async function POST(req: NextRequest) {
         name: username,
       },
     });
+    // Wrong password
     if (!bcrypt.compareSync(password, user.password)) {
       return new Response(jsonS({ error: 'Invalid credentials' }), { status: 401 });
     }
   } catch (error) {
+    // Wrong username
     if (error.message == 'NotFoundError' || error.code == 'P2025') {
       return new Response(jsonS({ error: 'Invalid credentials' }), { status: 401 });
     }
+    // Unknown error
     console.error(error);
     return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
 
+  //Get user data abd store it in jwt
   const { id, name, mail, error, perms } = await getUserData(username);
   if (error) {
     return new Response(jsonS({ error }), { status: 500 });
