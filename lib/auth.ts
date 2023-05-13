@@ -66,7 +66,6 @@ export async function getUserData(info: string) {
     console.log(error);
     return { error: 'Server error' };
   }
-  console.log(user);
   return { id: user.id, name: user.name, mail: user.email, perms: user.permissions };
 }
 
@@ -106,7 +105,6 @@ export function validateInputs(inputs: Inputs) {
       password: returnInputs.password,
     };
   } catch (error) {
-    console.log(error);
   }
 
   try {
@@ -121,7 +119,6 @@ export function validateInputs(inputs: Inputs) {
       password: returnInputs.password,
     };
   } catch (error) {
-    console.log(error);
   }
 
   try {
@@ -145,7 +142,6 @@ export function validateInputs(inputs: Inputs) {
       };
     }
   } catch (error) {
-    console.log(error);
   }
   return returnInputs;
 }

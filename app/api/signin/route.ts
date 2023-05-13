@@ -62,3 +62,4 @@ export async function POST(req: NextRequest) {
   const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail, perms);
   return new Response(jsonS({ jwt, time: 1 }), { status: 200 });
 }
+ 
