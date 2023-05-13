@@ -15,8 +15,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/components/ui/use-toast';
 import { post } from '@/lib/fetch';
+import { IconInfoCircle } from '@tabler/icons-react';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -62,7 +64,17 @@ export default function Register() {
             </CardHeader>
             <CardContent className='space-y-4'>
               <div className='space-y-1'>
-                <Label htmlFor='username'>Username</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Label htmlFor='username'>Username</Label>
+                      <IconInfoCircle size={18} className='inline ml-1' />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Min 5, max 16, lowercase, upercase numbers and dashes only.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <Input required name='username' id='username' placeholder='David Nowotny' />
               </div>
               <div className='space-y-1'>
@@ -70,11 +82,31 @@ export default function Register() {
                 <Input required type='email' name='email' id='email' placeholder='nowotny@mail.com' />
               </div>
               <div className='space-y-1'>
-                <Label htmlFor='password'>Password</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Label htmlFor='password'>Password</Label>
+                      <IconInfoCircle size={18} className='inline ml-1' />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Minimum 8, maximum 32, numbers and special characters recomended</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <Input required type='password' id='password' name='password' placeholder='••••••••' />
               </div>
               <div className='space-y-1'>
-                <Label htmlFor='repeat'>Repeat password</Label>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Label htmlFor='repeat'>Repeat password</Label>
+                      <IconInfoCircle size={18} className='inline ml-1' />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Minimum 8, maximum 32, numbers and special characters recomended</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <Input required type='password' id='repeat' name='repeat' placeholder='••••••••' />
               </div>
               <div className='flex items-center'>
@@ -85,7 +117,9 @@ export default function Register() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button disabled className='m-auto'>Create account</Button>
+              <Button disabled className='m-auto'>
+                Create account
+              </Button>
             </CardFooter>
           </form>
         </Card>
@@ -97,8 +131,8 @@ export default function Register() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Why cant I sign up??!!</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Making sign up functionality would held me resonsible under EU law if i would suffer data leak, and because i cannot trust my garbage code
-                  dashboard will be only avalible for me.
+                  Making sign up functionality EU law would force me to write TOS and would held me responsible as your data administrator so dashboard will be
+                  only avalible for me.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
