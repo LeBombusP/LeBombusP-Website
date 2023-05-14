@@ -1,5 +1,6 @@
 import Navbar from '@/components/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { Analytics } from '@vercel/analytics/react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
