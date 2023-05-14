@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   //Get user data abd store it in jwt
   const { id, name, mail, perms } = await getUserData(email);
   const jwt = await signJWT(process.env.JWT_KEY, '1d', id, name, mail, perms);
-
+  
   // Send email with jwt link
   try {
     sendgrid.setApiKey(process.env.EMAIL_KEY as string);
@@ -48,20 +48,13 @@ export async function POST(req: NextRequest) {
       <p>This link will expire in 8 hours</p><br>
       <p>Not you? Do NOT click the link and just ingore the email</p>`,
     };
-    sendgrid.send(msg).then(
-      () => {
-        return new Response(jsonS({ message: 'Email sent' }), { status: 200 });
-      },
-      (error) => {
-        console.log(error);
-        if (error.response) {
-          console.log(error.response.body);
-        }
-        return new Response(jsonS({ error: 'Server error' }), { status: 500 });
-      }
-    );
+    await sendgrid.send(msg)
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    if (error.response) {
+      console.log(error.response.body);
+    }
     return new Response(jsonS({ error: 'Server error' }), { status: 500 });
   }
+  return new Response(jsonS({ message: 'Email sent' }), { status: 200 });
 }
