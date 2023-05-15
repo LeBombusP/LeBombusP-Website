@@ -15,15 +15,15 @@ export async function middleware(request: NextRequest) {
     }
   }
   //if login and jwt -> dashboard
-  if (request.nextUrl.pathname.startsWith('/login')||request.nextUrl.pathname.startsWith('/signup')) {
-    let cookie = request.cookies.get('jwt')?.value;
-    if (cookie) {
-      const auth = await verifyJWT(process.env.JWT_KEY,cookie);
-      if (auth?.verified) {
-        return NextResponse.rewrite(new URL('/dashboard', request.url));
-      }
-    }
-  }
+  // if (request.nextUrl.pathname.startsWith('/login')||request.nextUrl.pathname.startsWith('/signup')) {
+  //   let cookie = request.cookies.get('jwt')?.value;
+  //   if (cookie) {
+  //     const auth = await verifyJWT(process.env.JWT_KEY,cookie);
+  //     if (auth?.verified) {
+  //       return NextResponse.rewrite(new URL('/dashboard', request.url));
+  //     }
+  //   }
+  // }
 
   return NextResponse.next()
 }
