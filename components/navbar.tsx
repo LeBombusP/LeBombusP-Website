@@ -37,7 +37,7 @@ export default function Navbar() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link href='/dashboard' legacyBehavior passHref>
+            <Link prefetch={false} href='/dashboard' legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>Dashboard</NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
