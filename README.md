@@ -12,4 +12,4 @@ This is my personal website project made with:
 
 ## License
 
-MIT - If for some reason you want to use this garbage code feel free to do so.
+ISC - If for some reason you want to use this garbage code feel free to do so.
