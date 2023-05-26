@@ -12,6 +12,12 @@ export default function Dashboard() {
     <main>
       <p>Dashboard</p>
       <button onClick={logout}>Logout</button>
+      {/* dasshboard content:
+        Spinning wheel
+        Rigged spinning wheel
+        chat app
+        ark server controlls
+      */}
     </main>
   );
 }
